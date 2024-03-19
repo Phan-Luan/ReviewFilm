@@ -1,0 +1,4 @@
+- client: bs5,jquery,ejs
+- upload dùng multer -> lưu path vào db
+- admin: phân trang, jquery
+- api đúng chuẩn(cấu trúc chuẩn api)
