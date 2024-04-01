@@ -1,0 +1,99 @@
+<%- include('partials/header') -%>
+  <div class="row">
+    <h2 class="text-center text-muted my-4 title-search-page"></h2>
+    <div id="listFilm">
+      <div class="d-flex row row-cols-1 row-cols-sm-2 row-cols-md-5">
+        <%if(typeof filmWithReview !=='undefined' ){ filmWithReview.forEach(item=>{
+          %>
+          <div class="col mb-4">
+            <div class="card shadow-sm film-item">
+              <div class="img-film card-img">
+                <span data-link-film="/film/<%= item.film.slug%>" class="link-dark view-detail-film">
+                  <img class="bd-placeholder-img card-img-top" width="100%" height="325"
+                    src="/assets/images/<%= item.film.image%>" alt="thumbnail">
+                </span>
+                <i class="fa-solid fa-play play-trailer" data-name-trailer="<%= item.film.name%>"
+                  data-id-trailer="<%= item.film.trailerId%>" data-bs-toggle="modal"
+                  data-bs-target="#modalShowTrailer"></i>
+              </div>
+              <div class="card-body">
+                <span data-link-film="/film/<%= item.film.slug%>" class="link-dark view-detail-film"
+                  style="text-decoration: none;">
+                  <div class="d-flex flex-column justify-content-between align-items-center">
+                    <h6 class="show-text-1 text-primary-color">
+                      <%= item.film.name %>
+                    </h6>
+                    <div class="d-flex align-items-center gap-2">
+                      <%if(item.film.avgStar==0){%>
+                        <span class="text-muted">Chưa có đánh giá nào</span>
+                        <%}else{%>
+                          <h6 class="avg-star">
+                            <i class="fa-solid fa-star text-warning"></i>
+                            <%= item.film.avgStar%><span style="font-size: 14px;">/10</span> <span class="text-muted"
+                                style="font-size: 14px;">
+                                (<%= item.totalReviews%> đánh giá)
+                              </span>
+                          </h6>
+                          <%}%>
+                    </div>
+                  </div>
+                  </a>
+              </div>
+            </div>
+          </div>
+          <% })}%>
+      </div>
+      <%if(typeof filmWithReview !=='undefined' ){ if(filmWithReview.length===0){ %>
+        <div class="empty-data d-flex justify-content-center flex-column align-items-center">
+          <img src="/assets/images/admin/empty-data.png" width="200" alt="empty-data">
+          <h5 class="text-muted">Không tìm thấy bộ phim nào</h5>
+          <span class="text-muted">Hãy thử tìm kiếm với nội dung chính xác hơn</span>
+        </div>
+        <% } }%>
+    </div>
+    <div class="modal fade" style="z-index: 9999;" id="modalShowTrailer" tabindex="-1"
+      aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+        <div class="modal-content border-0 bg-transparent">
+          <div class="modal-header border-bottom-0">
+            <button type="button" class="btn-close" id="closeModalShowTrailer" data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-0" id="modalShowFilm">
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <%if(typeof filmWithReview !=='undefined' ){%>
+      <% if(filmWithReview.length>0){%>
+        <div class="row mt-4">
+          <ul class="pagination justify-content-center">
+            <li class="page-item pre-page" onclick="changePage('pre')">
+              <a class="page-link" href="#" aria-label="Previous" aria-disabled="false">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <% if (typeof page.totalPage !=='undefined' ) { %>
+              <input type="hidden" id="totalPage" value="<%= page.totalPage %>">
+              <% for (let i=1; i <=page.totalPage; i++) { %>
+                <li class="" data-page="<%=i%>">
+                  <span data-page-number="<%=i%>" class="page-link page-link-number page-bg-color-<%=i%>">
+                    <%= i%>
+                  </span>
+                </li>
+                <% } %>
+                  <% } %>
+                    <li class="page-item next-page" onclick="changePage('next')">
+                      <a class="page-link" href="#" aria-disabled="false" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+          </ul>
+        </div>
+        <%}%>
+          <%}%>
+
+  </div>
+  <script src="/assets/js/search.js"></script>
+  <%- include('partials/footer') -%>

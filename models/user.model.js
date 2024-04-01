@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
 const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
-const Image = require("./image.model");
+const avatarDefault = "admin/avatar-default.jpg";
 
 const UserSchema = new Schema(
   {
@@ -21,8 +21,9 @@ const UserSchema = new Schema(
       required: true,
       trim: true,
     },
-    avatar: {
+    image: {
       type: String,
+      default: avatarDefault,
     },
     deleted: {
       type: Boolean,
@@ -31,12 +32,7 @@ const UserSchema = new Schema(
     },
     active: {
       type: Boolean,
-      default: false,
-    },
-    updatedBy: {
-      type: Schema.Types.ObjectId,
-      ref: "Account",
-      select: false,
+      default: true,
     },
   },
   {
@@ -84,13 +80,11 @@ UserSchema.methods.comparePassword = function (password) {
 };
 
 UserSchema.methods.getPublicFields = async function () {
-  const avatar = await Image.findById(this._id).select("path").lean();
   return {
     _id: this._id,
     email: this.email,
-    phone: this.phone,
     name: this.name,
-    avatar: avatar,
+    image: this.image,
   };
 };
 

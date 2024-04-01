@@ -1,0 +1,30 @@
+<%- include("../partials/admin/auth-header.ejs") -%>
+  <div class="container">
+    <div class="row mt-lg-n10 mt-md-n11 mt-n10 justify-content-center">
+      <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+        <div class="card z-index-0">
+          <div class="card-header text-center pt-4">
+            <h5>Login with</h5>
+          </div>
+          <div class="card-body">
+            <form role="form">
+              <div class="mb-3">
+                <input type="text" id="admin-login-username" class="form-control" placeholder="Email or username"
+                  aria-label="Email or Username">
+                <label for="" class="text-danger" id="admin-login-username-err"></label>
+              </div>
+              <div class="mb-3">
+                <input type="password" id="admin-login-password" class="form-control" placeholder="Password"
+                  aria-label="Password">
+                <label for="" class="text-danger" id="admin-login-password-err"></label>
+              </div>
+              <div class="text-center">
+                <button type="button" id="btn-admin-login" class="btn bg-gradient-dark w-100 my-4 mb-2">Sign in</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include("../partials/admin/auth-footer.ejs") -%>

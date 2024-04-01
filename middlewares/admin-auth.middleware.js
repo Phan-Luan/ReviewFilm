@@ -1,52 +1,40 @@
 const createError = require("http-errors");
-const { verifyToken } = require("../libs/helpers");
-const Routes = require("../routes/admin");
-
+const jwt = require("jsonwebtoken");
 const adminAuthMiddleware = {
   checkToken,
-  requiredLogin,
   checkRole,
 };
+const roleAdmin = ["super_admin", "admin", "customer_service"];
 
 async function checkToken(req, res, next) {
+  const authorizationHeader =
+    req.headers["authorization"] || req.cookies["jwt-admin"];
+  if (!authorizationHeader) return res.redirect("admin/login");
+  const token = authorizationHeader.split(" ")[1];
+  if (!token) return res.sendStatus(401);
   try {
-    let token = req.headers["x-access-token"] || req.headers["authorization"];
-    if (token) {
-      if (token.startsWith("Token ")) {
-        token = token.slice(6, token.length);
-      }
-      req.user = await verifyToken(
-        token,
-        process.env.ADMIN_ACCESS_TOKEN_SECRET
-      );
-    }
+    req.user = await new Promise((resolve, reject) => {
+      jwt.verify(token, process.env.ADMIN_ACCESS_TOKEN_SECRET, (err, data) => {
+        if (err) return reject(err);
+        resolve(data);
+      });
+    });
     next();
   } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      return next(createError(401, "Token hết hạn."));
-    } else if (err.name === "JsonWebTokenError") {
-      return next(createError(403, "Bạn phải đăng nhập lại để tiếp tục."));
-    } else {
-      return res.status(400).send();
-    }
-  }
-}
-
-async function requiredLogin(req, res, next) {
-  if (req.user) {
-    next();
-  } else {
-    return next(createError(403, "Bạn phải đăng nhập để tiếp tục."));
+    return res.sendStatus(403);
   }
 }
 
 async function checkRole(req, res, next) {
-  const router = Routes.find(
-    (e) => e.path === req.route.path && e.method === req.method
-  );
-  if (!router || !router.roles.includes(req.user.role))
-    return next(createError(403, "Bạn không có quyền."));
-  next();
+  if (req.user) {
+    if (roleAdmin.includes(req.user.role)) {
+      next();
+    } else {
+      return next(createError(403, "Bạn không có quyền."));
+    }
+  } else {
+    return next(createError(403, "Bạn phải đăng nhập để tiếp tục."));
+  }
 }
 
 module.exports = adminAuthMiddleware;

@@ -17,7 +17,7 @@ const ReplySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Review",
     },
-    like: [
+    likes: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",

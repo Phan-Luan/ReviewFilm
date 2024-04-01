@@ -1,0 +1,150 @@
+<%- include('partials/header') -%>
+  <%- include('partials/topbar') -%>
+    <div class="row" style="margin-top: 90px;">
+      <div class="col-9">
+        <div class="row d-flex justify-content-end">
+          <select id="film-form-search">
+            <option value="">Sắp xếp theo</option>
+            <option value="new">Mới nhất</option>
+            <option value="old">Cũ nhất</option>
+            <option value="good">Đánh giá cao nhất</option>
+            <option value="bad">Đánh giá thấp nhất</option>
+          </select>
+        </div>
+        <div id="listFilm">
+          <div class="d-flex row row-cols-1 row-cols-sm-2 row-cols-md-4">
+            <%if(typeof filmWithReview !=='undefined' ){ filmWithReview.forEach(item=>{
+              %>
+              <div class="col mb-4">
+                <div class="card shadow-sm film-item">
+                  <div class="img-film card-img">
+                    <span data-link-film="/film/<%= item.film.slug%>" class="link-dark view-detail-film">
+                      <img class="bd-placeholder-img card-img-top" width="100%" height="325"
+                        src="/assets/images/<%= item.film.image%>" alt="thumbnail">
+                    </span>
+                    <i class="fa-solid fa-play play-trailer" data-name-trailer="<%= item.film.name%>"
+                      data-id-trailer="<%= item.film.trailerId%>" data-bs-toggle="modal"
+                      data-bs-target="#modalShowTrailer"></i>
+                  </div>
+                  <div class="card-body">
+                    <span data-link-film="/film/<%= item.film.slug%>" class="link-dark view-detail-film"
+                      style="text-decoration: none;">
+                      <div class="d-flex flex-column justify-content-between align-items-center">
+                        <h6 class="show-text-1 text-primary-color">
+                          <%= item.film.name %>
+                        </h6>
+                        <div class="d-flex align-items-center gap-2">
+                          <%if(item.film.avgStar==0){%>
+                            <span class="text-muted">Chưa có đánh giá nào</span>
+                            <%}else{%>
+                              <h6 class="avg-star">
+                                <i class="fa-solid fa-star text-warning"></i>
+                                <%= item.film.avgStar%><span style="font-size: 14px;">/10</span> <span
+                                    class="text-muted" style="font-size: 14px;">
+                                    (<%= item.totalReviews%> đánh giá)
+                                  </span>
+                              </h6>
+                              <%}%>
+                        </div>
+                      </div>
+                      </a>
+                  </div>
+                </div>
+              </div>
+              <% })}%>
+          </div>
+        </div>
+        <div class="modal fade" style="z-index: 9999;" id="modalShowTrailer" tabindex="-1"
+          aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+            <div class="modal-content border-0 bg-transparent">
+              <div class="modal-header border-bottom-0">
+                <button type="button" class="btn-close text-light" id="closeModalShowTrailer" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+              </div>
+              <div class="modal-body p-0" id="modalShowFilm">
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <ul class="pagination justify-content-center">
+            <li class="page-item pre-page" onclick="changePage('pre')">
+              <span class="page-link" href="#" aria-label="Previous" aria-disabled="false">
+                <span aria-hidden="true">&laquo;</span>
+              </span>
+            </li>
+            <% if (typeof page.totalPage !=='undefined' ) { %>
+              <input type="hidden" id="totalPage" value="<%= page.totalPage %>">
+              <% for (let i=1; i <=page.totalPage; i++) { %>
+                <li class="page-item" data-page="<%=i%>">
+                  <span class="page-link home-page-number page-bg-color-<%= i%>" data-home-page="<%= i%>">
+                    <%= i%>
+                  </span>
+                </li>
+                <% } %>
+                  <% } %>
+                    <li class="page-item next-page" onclick="changePage('next')">
+                      <span class="page-link" href="#" aria-label="Next" aria-disabled="false">
+                        <span aria-hidden="true">&raquo;</span>
+                      </span>
+                    </li>
+          </ul>
+
+        </div>
+      </div>
+      <div class="col-3">
+        <div class="stickey-list-review">
+          <h5 class="text-home" style="margin-bottom: 16px;">Các review mới nhất <i class="fa-regular fa-comments"></i>
+          </h5>
+          <%if(typeof newReviews !=='undefined' ){ newReviews.forEach(item=>{%>
+            <a href="/film/<%= item.film.slug%>" class="link-dark" style="text-decoration: none;">
+              <div class="card mt-2">
+                <div class="card-body new-reviews">
+                  <div class="info d-flex gap-2">
+                    <div class="card-image">
+                      <img src="/assets/images/<%= item.author.image%>" class="rounded-circle" width="40" height="40"
+                        alt="Avatar">
+                    </div>
+                    <div class="d-flex flex-column">
+                      <h6 class="card-title">
+                        <%= item.author.name%> <span class="text-muted">đã review</span>
+                          <span class="text-home">
+                            <%= item.film.name%>
+                          </span>
+                      </h6>
+                      <h6 class="text-muted" style="font-size: 14px;">
+                        <%= MOMENT(item.createdAt, "YYYYMMDD" ).locale("vi").fromNow()%>
+                      </h6>
+                    </div>
+                  </div>
+                  <h6 class="mt-2 card-subtitle mb-2 d-flex align-items-center">
+                    <div>
+                      <%= item.star %>
+                        <i class="star fa-solid fa-star"></i>
+                    </div>
+                    <div style="margin-left: 10px;">
+                      <% if (item.star>= 1 && item.star <= 4) { %>
+                          · Quá tệ
+                          <% } else if (item.star>= 5 && item.star <= 7) { %>
+                              · Tốt
+                              <% } else if (item.star>= 8 && item.star <= 9) { %>
+                                  · Đáng xem
+                                  <% } else if (item.star===10) { %>
+                                    · Cực phẩm
+                                    <% } %>
+                    </div>
+                  </h6>
+                  <p class="card-text show-text-2">
+                    <%=item.content%>
+                  </p>
+                </div>
+              </div>
+            </a>
+            <%})}%>
+        </div>
+      </div>
+    </div>
+    <script src="/assets/js/homePage.js"></script>
+    <%- include('partials/footer') -%>

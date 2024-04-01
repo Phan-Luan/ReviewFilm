@@ -1,0 +1,223 @@
+<%- include('partials/header') -%>
+  <div class="row mt-4" id="listFilm">
+    <div class="col-md-3 col-lg-3">
+      <div class="detail-film sticky d-flex flex-column align-items-center p-0">
+        <div class="position-relative mb-3 detail-film-img-f">
+          <img class="bd-placeholder-img card-img-top detail-film-img play-trailer-img"
+            src="/assets/images/<%= film.image%>" alt="thumbnail" data-id-trailer="<%= film.trailerId%>"
+            data-bs-toggle="modal" data-bs-target="#modalShowTrailer">
+          <i style="font-size: 20px;cursor: pointer;"
+            class="fa-solid fa-play position-absolute top-50 start-50 play-trailer"
+            data-id-trailer="<%= film.trailerId%>" data-name-trailer="<%= film.name%>" data-bs-toggle="modal"
+            data-bs-target="#modalShowTrailer"></i>
+          <input type="hidden" id="film-id" value="<%= film.id%>">
+        </div>
+        <div class="d-flex flex-column">
+          <h5 class="text-center title-detail-film">
+            <%= film.name%>
+          </h5>
+          <span><strong>Quốc gia:</strong>
+            <%= film.origin%>
+          </span>
+          <span><strong>Thời lượng:</strong>
+            <%= film.duration%> phút
+          </span>
+          <span><strong>Khởi chiếu:</strong>
+            <%= MOMENT(film.premiere).format('DD-MM-YYYY')%>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-9 col-lg-9 p-0">
+      <h2 class="">Review phim <%= film.name%>
+      </h2>
+      <%if(film.avgStar==0){%>
+        <p class="text-muted">Chưa có đánh giá nào</p>
+        <%}else{%>
+          <h5 class="avg-star">
+            <i class="fa-solid fa-star text-warning"></i>
+            <%= film.avgStar%><span style="font-size: 16px;">/10</span> <span class="text-muted"
+                style="font-size: 12px;">
+                (<%= totalReviews%> đánh giá)
+              </span>
+          </h5>
+          <%}%>
+            <div id="content">
+              <h5>Nội dung:</h5>
+              <h6 class="mb-0 show-text-2 text-muted">
+                <%= film.content%>
+              </h6><span id="content-action" class="text-warning show" style="cursor: pointer;">Xem thêm</span>
+            </div>
+            <div class="d-flex gap-4 mt-3">
+              <div class="">
+                <h5>Đạo diễn:</h5>
+                <h6 class="text-muted">
+                  <%= film.director%>
+                </h6>
+              </div>
+              <div class="">
+                <h5>Diễn viên:</h5>
+                <h6 class="text-muted">
+                  <%= film.actor%>
+                </h6>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="col-8">
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                  <div class="">
+                    <h4>Bình luận từ người xem</h4>
+                    <span class="text-muted total-review"></span>
+                  </div>
+                  <div class="action-group">
+                    <select id="review-form-search">
+                      <option value="">Sắp xếp theo</option>
+                      <option value="new">Mới nhất</option>
+                      <option value="old">Cũ nhất</option>
+                      <option value="good">Đánh giá cao nhất</option>
+                      <option value="bad">Đánh giá thấp nhất</option>
+                    </select>
+                    <button class="btn btn-primary btn-create-review" data-bs-toggle="modal"
+                      id="btn-open-modal-create-review"><i class="fa-solid fa-plus"></i> Review</button>
+                  </div>
+                </div>
+                <div id="reviews">
+                  <div id="listReview">
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 list-film-hot">
+                <div class="stickey-list-review">
+                  <h4 class="mt-4" style="margin-bottom: 38px;">Phim Hot</h4>
+                  <% if(listFilmHot!=='undefined' ){listFilmHot.forEach((item,index)=>{%>
+                    <a href="/film/<%= item.slug%>" class="link-dark view-detail-film" style="text-decoration: none;">
+                      <div class="card mt-2 ">
+                        <div class="card-body py-2 px-1">
+                          <div class="d-flex">
+                            <div class="img-list-film-hot">
+                              <img src="/assets/images/<%= item.image%>" alt="">
+                              <span class="number-top-film-hot">
+                                <%= index+1%>
+                              </span>
+                            </div>
+                            <div class="mx-3">
+                              <h6 class="card-title show-text-1">
+                                <%=item.name%>
+                              </h6>
+                              <span class="text-muted" style="font-size: 14px;">Khởi chiếu:
+                                <%= MOMENT(item.premiere).format('DD-MM-YYYY')%>
+                              </span><br>
+                              <span class="text-muted" style="font-size: 14px;">
+                                <i class="fa-solid fa-star text-warning"></i>
+                                <%= item.avgStar%>
+                                  <% if (item.star>= 1 && item.star <= 4) { %>
+                                      · Quá tệ
+                                      <% } else if (item.star>= 5 && item.star <= 7) { %>
+                                          · Tốt
+                                          <% } else if (item.star>= 8 && item.star <= 9) { %>
+                                              · Đáng xem
+                                              <% } else if (item.star===10) { %>
+                                                · Cực phẩm
+                                                <% } %>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </a>
+                    <%}) }%>
+                </div>
+              </div>
+            </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" style="z-index: 9999;" id="modalReplyReview" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 10%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-film-title">
+            Create reply review film
+          </h5>
+          <button type="button" class="btn-close" id="closeModalCreateReview" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="form-group mx-2">
+            <input type="hidden" id="id-reply-review">
+            <label for="">Nội dung</label>
+            <textarea id="create-reply-review-content" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="d-flex gap-2 my-2 justify-content-end mx-4 align-items-center">
+          <button type="button" class="btn btn-secondary mt-0" data-bs-dismiss="modal">Huỷ</button>
+          <div id="modal-film-footer">
+            <button type="button" class="btn btn-primary btn-form" id="btn-crate-reply-review">Gửi</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" style="z-index: 9999;" id="modalCreateReview" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="margin-top: 10%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal-film-title">
+            Create review film
+          </h5>
+          <button type="button" class="btn-close" id="closeModalCreateReview" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="rating">
+            <span class="star-value" data-star="10">☆</span>
+            <span class="star-value" data-star="9">☆</span>
+            <span class="star-value" data-star="8">☆</span>
+            <span class="star-value" data-star="7">☆</span>
+            <span class="star-value" data-star="6">☆</span>
+            <span class="star-value" data-star="5">☆</span>
+            <span class="star-value" data-star="4">☆</span>
+            <span class="star-value" data-star="3">☆</span>
+            <span class="star-value" data-star="2">☆</span>
+            <span class="star-value" data-star="1">☆</span>
+            <p class="text-rating"></p>
+          </div>
+          <input type="hidden" id="create-review-rating">
+          <div class="form-group mx-2">
+            <label for="">Nội dung</label>
+            <textarea id="create-review-content" class="form-control" rows="3"></textarea>
+          </div>
+          <div class="form-group mx-2">
+            <label for="">Hình ảnh</label>
+            <input type="file" id="create-review-image" class="form-control">
+          </div>
+        </div>
+        <div class="d-flex gap-2 my-2 justify-content-end mx-4 align-items-center">
+          <button type="button" class="btn btn-secondary mt-0" data-bs-dismiss="modal">Huỷ</button>
+          <div id="modal-film-footer">
+            <button type="button" class="btn btn-primary btn-form" id="btn-crate-review">Đăng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" style="z-index: 9999;" id="modalShowTrailer" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+      <div class="modal-content border-0 bg-transparent">
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close" id="closeModalShowTrailer" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0" id="modalShowFilm">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <%- include('partials/footer') -%>
+    <script src="/assets/js/detail.js"></script>

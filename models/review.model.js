@@ -7,9 +7,9 @@ const ReviewSchema = new Schema(
     star: {
       type: Number,
       required: true,
-      default: 5,
+      default: 1,
       min: 1,
-      max: 5,
+      max: 10,
     },
     content: {
       type: String,

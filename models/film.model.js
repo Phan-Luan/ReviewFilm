@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const slugName = require("mongoose-slug-updater");
 
 const FilmSchema = new Schema(
   {
@@ -10,9 +11,10 @@ const FilmSchema = new Schema(
     },
     slug: {
       type: String,
-      required: true,
+      slug: "name",
+      unique: true,
     },
-    trailerUrl: {
+    trailerId: {
       type: String,
       required: true,
       trim: true,
@@ -30,11 +32,12 @@ const FilmSchema = new Schema(
       required: true,
       trim: true,
     },
-    actor: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    actor: [
+      {
+        type: String,
+        trim: true,
+      },
+    ],
     origin: {
       type: String,
       required: true,
@@ -47,22 +50,31 @@ const FilmSchema = new Schema(
     },
     premiere: {
       type: Date,
+      // required: true,
     },
     deleted: {
       type: Boolean,
       default: false,
       select: false,
     },
+    isHidden: {
+      type: Boolean,
+      default: false,
+    },
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: "Account",
       select: false,
     },
-    // updatedBy: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "Account",
-    //   select: false,
-    // },
+    updatedBy: {
+      type: Schema.Types.ObjectId,
+      ref: "Account",
+      select: false,
+    },
+    avgStar: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     toJSON: { virtuals: true },
@@ -70,6 +82,8 @@ const FilmSchema = new Schema(
     timestamps: true,
   }
 );
+
+FilmSchema.plugin(slugName);
 
 const Film = mongoose.model("Film", FilmSchema);
 
