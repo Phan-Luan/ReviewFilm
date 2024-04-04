@@ -23,7 +23,7 @@ async function suggestFilm(req, res, next) {
       ];
     }
     const films = await Film.find(query)
-      .select("name slug image avgStar")
+      .select("name slug image avgStar premiere")
       .limit(4)
       .sort({ avgStar: -1 });
     res.send({ success: true, films });
@@ -87,9 +87,14 @@ async function getAll(req, res, next) {
     const totalFilm = await Film.countDocuments(query);
     page.totalPage = Math.ceil(totalFilm / page.pageSize);
     if (req.query.name || (req.query.name && req.query.current >= 1)) {
-      res.render("search", { filmWithReview, page });
+      res.render("search", { filmWithReview, page, title: "Tìm kiếm" });
     } else {
-      res.render("home", { filmWithReview, newReviews, page });
+      res.render("home", {
+        filmWithReview,
+        newReviews,
+        page,
+        title: "Trang chủ",
+      });
     }
   } catch (err) {
     showError("getAll", res, err);
@@ -113,6 +118,7 @@ async function getById(req, res, next) {
       film,
       totalReviews,
       listFilmHot,
+      title: "Chi tiết phim",
     });
   } catch (err) {
     showError("getById", res, err);

@@ -19,9 +19,7 @@ router.post("/register", accountController.create);
 // MIDDLEWARE
 router.use(authMiddleware.checkToken);
 router.use(authMiddleware.checkRole);
-router.get("/", (req, res, next) => {
-  res.render("admin/home");
-});
+router.get("/", adminController.index);
 router.get("/logout", adminController.logout);
 
 router.use("/film", filmRoute);

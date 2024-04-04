@@ -5,10 +5,18 @@
         <div class="card mb-4">
           <div class="card-header d-flex justify-content-between align-items-center p-3">
             <h6>Danh sách phim</h6>
-            <button type="button" id="btn-create-film-admin" class="btn btn-primary mb-0" data-bs-toggle="modal"
-              data-bs-target="#modalFilm">
-              Thêm mới
-            </button>
+            <div class="action d-flex align-items-center gap-4">
+              <div class="form-search-film-admin d-flex align-items-center gap-1">
+                <input type="text" class="form-control text-search-film" placeholder="Tìm theo tên phim">
+                <button class="btn btn-primary mb-0 btn-search-film">Tìm kiếm</button>
+                <i class="fa fa-remove btn-remove-search-film d-none"></i>
+              </div>
+              <button type="button" id="btn-create-film-admin" class="btn btn-primary mb-0" data-bs-toggle="modal"
+                data-bs-target="#modalFilm">
+                <i class="fa fa-plus"></i> Thêm mới
+              </button>
+            </div>
+
           </div>
 
           <div class="card-body px-0 pt-0 pb-2">
@@ -180,6 +188,11 @@
       const params = new URLSearchParams(pageParam);
       const totalPage = $("#totalPage").val()
       const currentPage = params.get("page") || 1;
+      const searchText = params.get("name")
+      if (searchText) {
+        $(".text-search-film").val(searchText)
+        $(".form-search-film-admin i").removeClass("d-none")
+      }
       if (currentPage == 1) {
         $(".pre-page-film").addClass("disabled");
         $(".pre-page-film a").attr("aria-disabled", "true");

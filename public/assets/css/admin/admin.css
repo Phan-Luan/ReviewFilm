@@ -1,0 +1,58 @@
+.form-search-user-admin button,
+.form-search-review-admin button,
+.form-search-film-admin button {
+  width: 115px;
+}
+
+.form-search-user-admin,
+.form-search-review-admin,
+.form-search-film-admin {
+  position: relative;
+}
+
+.form-search-user-admin i,
+.form-search-review-admin i,
+.form-search-film-admin i {
+  position: absolute;
+  right: 100px;
+  cursor: pointer;
+}
+
+#trailer-film-admin {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+#trailer-film-admin img {
+  border-radius: 5px;
+}
+
+#trailer-film-admin i:hover {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#trailer-film-admin img:hover {
+  transform: scale(1.3);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.trailer-img {
+  overflow: hidden;
+  width: 100px;
+  height: 149px;
+  border-radius: 5px;
+}
+
+.admin-play-trailer {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 10px;
+  border-radius: 50%;
+}

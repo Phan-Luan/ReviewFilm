@@ -42,6 +42,10 @@ const ReviewSchema = new Schema(
       default: false,
       select: false,
     },
+    slugFilmName: {
+      type: String,
+      default: "",
+    },
   },
   {
     toJSON: { virtuals: true },

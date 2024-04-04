@@ -1,5 +1,8 @@
 $(function () {
   const path = location.pathname.split("/")[2];
+  if (path === undefined) {
+    eventShowTrailer();
+  }
   if (path === "login") eventLogin();
   if (path === "film") {
     eventDeleteFilm();
@@ -8,6 +11,7 @@ $(function () {
     eventEditFilm();
     eventUpdateFilm();
     updateIsHidden();
+    eventSearchFilm();
   }
   if (path === "user") {
     eventResetFormUser();
@@ -16,10 +20,12 @@ $(function () {
     eventCreateUser();
     eventEditUser();
     eventUpdateUser();
+    eventSearchUser();
   }
   if (path === "review") {
     updateIsHiddenReview();
     eventDeleteReview();
+    eventSearchReview();
   }
   $("#admin-logout").click(function () {
     localStorage.removeItem("jwt-admin");
@@ -29,6 +35,74 @@ $(function () {
   const admin = localStorage.getItem("admin-detail");
   admin.name ? $("#name-admin").text(admin.name) : "";
 });
+
+function eventShowTrailer() {
+  $("#listFilmAdmin").on(
+    "click",
+    ".admin-play-trailer,.play-trailer-img-admin",
+    function () {
+      $("#modalShowFilmAdmin").html("");
+      const idTrailer = $(this).data("id-trailer-admin");
+      const nameFilm = $(this).data("name-trailer-admin");
+      const createIframe = `<iframe width="100%" height="432" src="https://www.youtube.com/embed/${idTrailer}"
+                  title="${nameFilm}" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen></iframe>`;
+      $("#modalShowFilmAdmin").append(createIframe);
+    }
+  );
+  $("#closeModalShowTrailerAdmin").click(function () {
+    $("#modalShowFilmAdmin").html("");
+  });
+  $("#modalShowTrailerAdmin").click(function () {
+    $("#modalShowFilmAdmin").html("");
+  });
+}
+
+function eventSearchUser() {
+  $(".form-search-user-admin").on("click", ".btn-search-user", function () {
+    let textSearch = $(".text-search-user").val();
+    textSearch = convertToSlug(textSearch);
+    window.location.href = `/admin/user/users?name=${textSearch}`;
+  });
+  $(".form-search-user-admin").on(
+    "click",
+    ".btn-remove-search-user",
+    function () {
+      window.location.href = `/admin/user/users`;
+    }
+  );
+}
+
+function eventSearchReview() {
+  $(".form-search-review-admin").on("click", ".btn-search-review", function () {
+    let textSearch = $(".text-search-review").val();
+    textSearch = convertToSlug(textSearch);
+    window.location.href = `/admin/review/reviews?name=${textSearch}`;
+  });
+  $(".form-search-review-admin").on(
+    "click",
+    ".btn-remove-search-review",
+    function () {
+      window.location.href = `/admin/review/reviews`;
+    }
+  );
+}
+
+function eventSearchFilm() {
+  $(".form-search-film-admin").on("click", ".btn-search-film", function () {
+    let textSearch = $(".text-search-film").val();
+    textSearch = convertToSlug(textSearch);
+    window.location.href = `/admin/film/films?name=${textSearch}`;
+  });
+  $(".form-search-film-admin").on(
+    "click",
+    ".btn-remove-search-film",
+    function () {
+      window.location.href = `/admin/film/films`;
+    }
+  );
+}
 
 function createError(condition, el, msg) {
   let err = $(`#${el}`);
@@ -285,7 +359,7 @@ function eventCreateUser() {
     if (res.user) {
       $("#modalUser").modal("hide");
       $(".modal-backdrop").remove();
-      toastr.error("Thêm người dùng thành công", "Success!", {
+      toastr.success("Thêm người dùng thành công", "Success!", {
         timeOut: 5000,
       });
       const newUser = `
@@ -560,4 +634,21 @@ async function getById(url, id) {
   const response = await fetch(`${url}/${id}`);
   const data = await response.json();
   return data;
+}
+
+function convertToSlug(str) {
+  str = str.toLowerCase();
+  str = str.replace(/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/g, "a");
+  str = str.replace(/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/g, "e");
+  str = str.replace(/(ì|í|ị|ỉ|ĩ)/g, "i");
+  str = str.replace(/(ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ)/g, "o");
+  str = str.replace(/(ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ)/g, "u");
+  str = str.replace(/(ỳ|ý|ỵ|ỷ|ỹ)/g, "y");
+  str = str.replace(/(đ)/g, "d");
+  str = str.replace(/([^0-9a-z-\s])/g, "");
+  str = str.replace(/- /g, "");
+  str = str.replace(/(\s+)/g, "-");
+  str = str.replace(/^-+/g, "");
+  str = str.replace(/-+$/g, "");
+  return str;
 }

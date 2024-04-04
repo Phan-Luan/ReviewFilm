@@ -22,6 +22,10 @@ body {
   background-color: #0b0c10;
   opacity: 0.3;
 }
+.suggest-star-header {
+  display: flex;
+  align-items: center;
+}
 
 .card-img {
   overflow: hidden;
@@ -114,7 +118,7 @@ body {
   padding-left: 35px;
   border-radius: 32px;
 }
-.form-search-header i {
+.form-search-header-icon {
   position: relative;
   top: 50%;
   left: 10px;

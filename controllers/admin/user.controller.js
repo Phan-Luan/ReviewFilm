@@ -21,9 +21,10 @@ async function getAll(req, res, next) {
     if (req.query.name) {
       query["$or"] = [
         { name: { $regex: new RegExp(req.query.name, "i") } },
-        { slug: { $regex: new RegExp(req.query.name, "i") } },
+        { slugName: { $regex: new RegExp(req.query.name, "i") } },
       ];
     }
+
     const users = await User.find(query)
       .select("name email image active deleted")
       .limit(page.pageSize)
@@ -32,6 +33,7 @@ async function getAll(req, res, next) {
 
     const totalUser = await User.countDocuments(query);
     page.totalPage = Math.ceil(totalUser / page.pageSize);
+
     res.render("admin/user", { users, page });
   } catch (err) {
     console.log("Error:account.admin.controller.getAll: ", err);

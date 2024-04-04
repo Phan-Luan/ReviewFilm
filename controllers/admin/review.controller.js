@@ -19,10 +19,7 @@ async function getAll(req, res, next) {
       page.current = parseInt(req.query.page);
     }
     if (req.query.name) {
-      query["$or"] = [
-        { name: { $regex: new RegExp(req.query.name, "i") } },
-        { slug: { $regex: new RegExp(req.query.name, "i") } },
-      ];
+      query.slugFilmName = { $regex: new RegExp(req.query.name, "i") };
     }
     const reviews = await Review.find(query)
       .populate("film", "name")

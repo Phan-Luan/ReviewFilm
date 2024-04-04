@@ -22635,7 +22635,6 @@ hr.horizontal.gray-light {
   overflow-y: auto;
   padding: 0;
   box-shadow: none;
-  z-index: 9999;
 }
 
 .navbar-vertical.navbar-expand-xs .navbar-collapse {
@@ -24705,10 +24704,6 @@ hr.horizontal.gray-light {
 .table.align-items-center td,
 .table.align-items-center th {
   vertical-align: middle;
-}
-
-.table tbody tr:last-child td {
-  border-width: 0;
 }
 
 .table > :not(:last-child) > :last-child > * {

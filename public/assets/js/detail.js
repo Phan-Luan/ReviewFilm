@@ -292,7 +292,7 @@ function renderReviews(data) {
   }
   if (data.reviews.length > 0) {
     $(".total-review").html(
-      `Tìm thấy <strong>${data.totalReview}</strong> đánh giá`
+      `Đã có <strong>${data.totalReview}</strong> đánh giá`
     );
     reviews = data.reviews.map((item) => {
       let check = false;

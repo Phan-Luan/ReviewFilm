@@ -3,6 +3,7 @@ const mongooseLeanVirtuals = require("mongoose-lean-virtuals");
 const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 const avatarDefault = "admin/avatar-default.jpg";
+const slugName = require("mongoose-slug-updater");
 
 const UserSchema = new Schema(
   {
@@ -10,6 +11,11 @@ const UserSchema = new Schema(
       type: String,
       lowercase: true,
       trim: true,
+    },
+    slugName: {
+      type: String,
+      slug: "name",
+      unique: true,
     },
     password: {
       type: String,
@@ -89,7 +95,7 @@ UserSchema.methods.getPublicFields = async function () {
 };
 
 UserSchema.index({ phone: "text" });
-
+UserSchema.plugin(slugName);
 UserSchema.plugin(mongooseLeanVirtuals);
 
 const User = mongoose.model("User", UserSchema);

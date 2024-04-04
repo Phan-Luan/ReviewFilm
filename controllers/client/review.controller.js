@@ -19,6 +19,8 @@ async function create(req, res, next) {
     const data = req.body;
     if (req.file) data.image = req.file.filename;
     data.author = req.user._id;
+    const film = await Film.findById(data.film).select("slug");
+    data.slugFilmName = film.slug;
     const newReview = await Review.create(data);
     if (newReview) {
       const totalReviews = await Review.countDocuments({

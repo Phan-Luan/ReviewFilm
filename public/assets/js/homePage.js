@@ -37,7 +37,7 @@ function eventSearchFilmHomePage() {
                 <div class="suggest-content">
                   <div class="suggest-image">
                     <img src="/assets/images/${film.image}"
-                      alt="">
+                      alt="image">
                   </div>
                   <div class="suggest-detail">
                     <span>${film.name}</span>

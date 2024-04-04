@@ -1,2 +1,110 @@
 <%- include('../partials/admin/header') -%>
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body p-2 d-flex flex-wrap gap-2">
+            <div class="card" style="width: 24rem;">
+              <div class="card-body">
+                <h6 class="card-title">Số người dùng</h6>
+                <p class="card-text">10</p>
+              </div>
+            </div>
+            <div class="card" style="width: 24rem;">
+              <div class="card-body">
+                <h6 class="card-title">Số người dùng</h6>
+                <p class="card-text">10</p>
+              </div>
+            </div>
+            <div class="card" style="width: 24rem;">
+              <div class="card-body">
+                <h6 class="card-title">Số người dùng</h6>
+                <p class="card-text">10</p>
+              </div>
+            </div>
+            <div class="card" style="width: 24rem;">
+              <div class="card-body">
+                <h6 class="card-title">Số người dùng</h6>
+                <p class="card-text">10</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-2">
+        <div class="card px-4 py-2">
+          <h5><i class="fa fa-fire"></i> Top phim hot</h5>
+          <div class="card-body px-0 pt-0 pb-2">
+            <div class="p-0">
+              <table class="table table-admin align-items-center mb-0 table-bordered">
+                <thead class="text-center">
+                  <th>STT</th>
+                  <th>Name</th>
+                  <th>Thumbnail</th>
+                  <th>Thời lượng</th>
+                  <th>Đạo diễn</th>
+                  <th>Diễn viên</th>
+                  <th>Quốc gia</th>
+                  <th>Đánh giá</th>
+                </thead>
+                <tbody id="listFilmAdmin">
+                  <%if(typeof films !=='undefined' ){ films.forEach((film,index)=>{ %>
+                    <tr id="<%= film._id%>" class="text-center">
+                      <td>
+                        <%= index+1%>
+                      </td>
+                      <td>
+                        <%= film.name%>
+                      </td>
+                      <td id="trailer-film-admin">
+                        <div class="trailer-img">
+                          <img src="/assets/images/<%= film.image%>" class="play-trailer-img-admin" alt="thumbnail"
+                            width="100" data-name-trailer-admin="<%= film.name%>"
+                            data-id-trailer-admin="<%= film.trailerId%>" data-bs-toggle="modal"
+                            data-bs-target="#modalShowTrailerAdmin">
+                        </div>
+                        <i class="fa fa-play admin-play-trailer" data-name-trailer-admin="<%= film.name%>"
+                          data-id-trailer-admin="<%= film.trailerId%>" data-bs-toggle="modal"
+                          data-bs-target="#modalShowTrailerAdmin"></i>
+                      </td>
+                      <td>
+                        <%= film.duration%>
+                      </td>
+                      <td>
+                        <%= film.director%>
+                      </td>
+                      <td>
+                        <%= film.actor %>
+                      </td>
+                      <td>
+                        <%= film.origin%>
+                      </td>
+                      <td>
+                        <%= film.avgStar %> <i class="fa fa-star text-warning"></i>
+                      </td>
+                    </tr>
+                    <% }) }%>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" style="z-index: 9999;" id="modalShowTrailerAdmin" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="margin-top: 10%;">
+      <div class="modal-content border-0 bg-transparent">
+        <div class="modal-header border-bottom-0">
+          <button type="button" class="btn-close text-light" id="closeModalShowTrailerAdmin" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-0" id="modalShowFilmAdmin">
+
+        </div>
+      </div>
+    </div>
+  </div>
   <%- include('../partials/admin/footer') -%>
