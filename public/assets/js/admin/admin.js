@@ -405,35 +405,29 @@ function eventCreateFilm() {
     const premiere = $("#create-film-premiere").val();
     const image = $("#create-film-image").prop("files")[0];
     const trailerId = trailerURL.split("=")[1];
-    if (
-      (name,
-      content,
-      trailerURL,
-      director,
-      actor,
-      duration,
-      origin,
-      premiere,
-      image)
-    ) {
-      const formData = new FormData();
-      formData.append("name", name);
-      formData.append("trailerId", trailerId);
-      formData.append("content", content);
-      formData.append("director", director);
-      formData.append("actor", actor);
-      formData.append("duration", duration);
-      formData.append("origin", origin);
-      formData.append("premiere", premiere);
-      formData.append("image", image);
-      const res = await createFilm(formData);
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("trailerId", trailerId);
+    formData.append("content", content);
+    formData.append("director", director);
+    formData.append("actor", actor);
+    formData.append("duration", duration);
+    formData.append("origin", origin);
+    formData.append("premiere", premiere);
+    formData.append("image", image);
+    const res = await createFilm(formData);
+    if (res.error) {
+      return toastr.error(res.error.msg, "Lỗi!", {
+        timeOut: 5000,
+      });
+    }
+    if (res.film) {
       $("#modalFilm").modal("hide");
       $(".modal-backdrop").remove();
-      if (res.film) {
-        toastr.success("Thêm phim mới thành công", "Success!", {
-          timeOut: 5000,
-        });
-        const newFilm = `
+      toastr.success("Thêm phim mới thành công", "Success!", {
+        timeOut: 5000,
+      });
+      const newFilm = `
       <tr id="${res.film._id}">
         <td>${res.film.name}</td>
         <td><img src="/assets/images/${res.film.image}" alt="thumbnail" width="100"></td>
@@ -452,12 +446,7 @@ function eventCreateFilm() {
         </td>
       </tr>
       `;
-        $("#filmList").append(newFilm);
-      } else {
-        toastr.success("Thêm phim mới thất bại", "Error!", {
-          timeOut: 5000,
-        });
-      }
+      $("#filmList").append(newFilm);
     }
   });
 }

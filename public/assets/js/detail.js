@@ -61,7 +61,12 @@ function eventCreateReview() {
     formData.append("content", content);
     formData.append("image", image);
     formData.append("film", filmId);
-    await createReview(formData, filmId);
+    const res = await createReview(formData, filmId);
+    if (res.error) {
+      return toastr.error(res.error.msg, "Lỗi!", {
+        timeOut: 5000,
+      });
+    }
     $("#modalCreateReview").modal("hide");
     $(".text-rating").text("");
     eventFetchReviews();
@@ -112,8 +117,8 @@ function eventCreateReplyReview() {
   $(document).on("click", "#btn-crate-reply-review", async function () {
     const reviewId = $("#id-reply-review").val();
     const content = $("#create-reply-review-content").val();
-    const res = await replyReview({ review: reviewId, content }, reviewId);
-    console.log(res);
+    await replyReview({ review: reviewId, content }, reviewId);
+
     $("#modalReplyReview").modal("hide");
 
     eventFetchReviews();
@@ -296,6 +301,11 @@ function renderReviews(data) {
     );
     reviews = data.reviews.map((item) => {
       let check = false;
+      item.review.likes.map((like) => {
+        if (like.id === data.userId) {
+          check = true;
+        }
+      });
       return `<div class="row mt-2 p-2 rounded-3" style="background-color: rgb(239,239,239);">
       <div class="d-flex align-items-center gap-3">
         <div class="card-image">
@@ -322,13 +332,6 @@ function renderReviews(data) {
         </span>
       </div>
       <div class="action d-flex gap-2 align-items-center mt-2">
-        ${item.review.likes
-          .map((like) => {
-            if (like.id === data.userId) {
-              check = true;
-            }
-          })
-          .join("")}
         <div class="d-flex align-items-center gap-1">
           <i style="font-size: 22px;cursor: pointer;" data-review-id="${item.review._id}" class="fa-solid btn-like-review fa-thumbs-up ${check ? "liked" : ""}"></i>
           <span class="review-like-count-${item.review.id}">
@@ -341,7 +344,7 @@ function renderReviews(data) {
     <div class="listReplylike">
       <div id="reply-review-${item.review._id}">
         ${
-          typeof item.replies !== "undefined"
+          item.replies
             ? item.replies
                 .map((reply) => {
                   let checkReply = false;

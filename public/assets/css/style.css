@@ -441,6 +441,13 @@ body {
 .view-detail-film:hover .img-list-film-hot img {
   transition: all 0.5s ease-in-out;
   transform: scale(1.2);
+}
+
+.view-detail-film:hover .img-list-film-hot span {
+  color: var(--primary-color);
+}
+
+.view-detail-film:hover .img-list-film-hot {
   border-radius: 5px;
 }
 

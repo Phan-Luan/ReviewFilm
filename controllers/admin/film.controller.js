@@ -58,8 +58,25 @@ async function getById(req, res, next) {
 async function create(req, res, next) {
   try {
     const data = req.body;
-    data.createBy = req.user._id;
     if (req.file) data.image = req.file.filename;
+    data.createBy = req.user._id;
+    if (!data.name) return sendError(res, 409, "Tên phim không được để trống");
+    if (!data.trailerId)
+      return sendError(res, 409, "URL trailer không được để trống");
+    if (!data.content)
+      return sendError(res, 409, "Nội dung không được để trống");
+    if (!data.director)
+      return sendError(res, 409, "Đạo diễn không được để trống");
+    if (!data.actor)
+      return sendError(res, 409, "Diễn viên không được để trống");
+    if (!data.duration)
+      return sendError(res, 409, "Thời lượng phim không được để trống");
+    if (!data.origin) return sendError(res, 409, "Xuất xứ không được để trống");
+    if (!data.premiere)
+      return sendError(res, 409, "Ngày khởi chiếu không được để trống");
+    if (!req.file) return sendError(res, 409, "Thumbnail không được để trống");
+    if (!data.createBy) return sendError(res, 409, "Vui lòng đăng nhập");
+
     const check_exists = await Film.exists({
       slug: data.slug,
       deleted: false,

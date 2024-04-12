@@ -25,6 +25,7 @@ const FilmSchema = new Schema(
     },
     duration: {
       type: Number,
+      required: true,
       default: 0,
     },
     director: {
@@ -50,7 +51,7 @@ const FilmSchema = new Schema(
     },
     premiere: {
       type: Date,
-      // required: true,
+      required: true,
     },
     deleted: {
       type: Boolean,

@@ -207,6 +207,9 @@ async function login(data) {
       });
     }
     if (res.accessToken) {
+      const expiresIn = moment().add(7, "days").format("YYYY-MM-DD");
+      document.cookie = `jwt=${res.accessToken};expires=${new Date(expiresIn)}`;
+
       localStorage.setItem("jwt", `Beaer ${res.accessToken}`);
       window.location.href = "/";
     }

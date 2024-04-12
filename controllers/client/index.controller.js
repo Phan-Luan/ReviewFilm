@@ -39,7 +39,7 @@ async function postLogin(req, res, next) {
           expiresIn: TOKENLIFE,
         }
       );
-      res.cookie("jwt", accessToken);
+
       res.send({ accessToken });
     } else {
       return sendError(res, 404, "Tài khoản không tồn tại");
@@ -60,6 +60,12 @@ function register(req, res, next) {
 
 async function postRegister(req, res, next) {
   try {
+    if (!req.body.email)
+      return sendError(res, 409, "Email không được để trống");
+    if (!req.body.password)
+      return sendError(res, 409, "Mật khẩu không được để trống");
+    if (!req.body.name) return sendError(res, 409, "Tên không được để trống");
+
     const check_exists_email = await User.findOne({
       email: req.body.email,
       deleted: false,

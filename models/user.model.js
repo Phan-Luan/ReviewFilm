@@ -11,6 +11,7 @@ const UserSchema = new Schema(
       type: String,
       lowercase: true,
       trim: true,
+      required: true,
     },
     slugName: {
       type: String,
@@ -85,16 +86,6 @@ UserSchema.methods.comparePassword = function (password) {
   return bcrypt.compareSync(password, this.password);
 };
 
-UserSchema.methods.getPublicFields = async function () {
-  return {
-    _id: this._id,
-    email: this.email,
-    name: this.name,
-    image: this.image,
-  };
-};
-
-UserSchema.index({ phone: "text" });
 UserSchema.plugin(slugName);
 UserSchema.plugin(mongooseLeanVirtuals);
 

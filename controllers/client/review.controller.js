@@ -21,6 +21,8 @@ async function create(req, res, next) {
     data.author = req.user._id;
     const film = await Film.findById(data.film).select("slug");
     data.slugFilmName = film.slug;
+    if (!data.star)
+      return sendError(res, 409, "Thang điểm không được để trống");
     const newReview = await Review.create(data);
     if (newReview) {
       const totalReviews = await Review.countDocuments({
