@@ -6,7 +6,7 @@ const mongodb = config.mongodb[ENV];
 module.exports = function () {
   mongoose.set("strictQuery", false);
 
-  mongoose.connect(mongodb.uri, mongodb.options);
+  mongoose.connect(process.env.MONGODB_URL);
 
   mongoose.connection.on("connected", function () {
     console.log("Mongoose default was connected.");
